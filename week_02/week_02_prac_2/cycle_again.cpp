@@ -1,51 +1,44 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
-
-const int N = 1e3+5;
-vector<int> adj[N];
+const int N = 1e3 + 5;
 bool visited[N];
+vector<int> adj[N];
 
-bool dfs(int u, int p=-1)
+bool dfs(int s, int p = -1)
 {
-	bool cycleExists = false;
-	visited[u] = true;
-	for(int v: adj[u])
-	{
-		if(v == p) continue;
-		if(visited[v]) return true;
-		cycleExists = cycleExists | dfs(v,u);
-	}
-	return cycleExists;
+    visited[s] = true;
+
+    bool isCycle = false;
+
+    for (int v : adj[s])
+    {
+        if (v == p)
+            continue;
+        if (visited[v]) 
+            return true;
+        isCycle = isCycle || dfs(v, s);    
+    }
+
+    return isCycle;
 }
 
 int main()
 {
-
-    int n,m;
+    int n, m;
     cin >> n >> m;
-
-    for(int i=0;i<m;i++)
+    while (m--)
     {
-    	int u,v;
-    	cin >> u >> v;
-    	adj[u].push_back(v);
-    	adj[v].push_back(u);
+        int u, v;
+        cin >> u >> v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
     }
 
-    bool isCycle = false;
-
-    for(int i=1;i<=n;i++)
-    {
-    	if(visited[i]) continue;
-    	isCycle |= dfs(i);
-    }
-
-    if(isCycle)
-    	cout << "YES";
-    else
-    	cout << "NO";
-
- 	return 0;
+    bool isCycle = dfs(1);
     
+    if(isCycle) cout << "Yes";
+    else cout << "No";
+
+    return 0;
 }
